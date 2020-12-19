@@ -20,49 +20,36 @@ class Program:
         self.go_main()
         self.root.mainloop()
 
-    def read_pcx_file(self):
+    def read_file(self):
         file_path = fd.askopenfilename()
         self.pic = Image.open(file_path)
 
-    def save_bmp_file(self):
-        export_file_path = fd.asksaveasfilename(defaultextension='.bmp', filetypes=[('Image (.bmp file)', '.bmp')])
-
+    def save_file(self, ext):
+        export_file_path = fd.asksaveasfilename(defaultextension=ext, filetypes=[(f'Image ({ext} file)', ext)])
         width = self.width.get()
         height = self.height.get()
         newsize = (width, height)
         resized_pic = self.pic.resize(newsize)
-
         resized_pic.save(export_file_path)
 
-    def save_modified_pcx(self):
-        export_file_path = fd.asksaveasfilename(defaultextension='.pcx', filetypes=[('Image (.pcx file)', '.pcx')])
-        self.pic = self.pic.convert('RGB')
-        edge_enhance = self.pic.filter(ImageFilter.EDGE_ENHANCE)
-        edge_enhance.save(export_file_path)
-
-    def save_modified_bmp(self):
-        export_file_path = fd.asksaveasfilename(defaultextension='.bmp', filetypes=[('Image (.bpm file)', '.bmp')])
-        self.pic = self.pic.convert('RGB')
-        edge_enhance = self.pic.filter(ImageFilter.EDGE_ENHANCE)
-        edge_enhance.save(export_file_path)
-
-    def read_bmp_file(self):
-        file_location = fd.askopenfilename()
-        self.pic = Image.open(file_location)
-
     def save_pcx_file(self):
-        export_file_location = fd.asksaveasfilename(defaultextension='.pcx', filetypes=[('Image (.pcx file)', '.pcx')])
-        width = self.width.get()
-        height = self.height.get()
-        newsize = (width, height)
-        resized_pic = self.pic.resize(newsize)
-        resized_pic.save(export_file_location)
+        self.save_file('.pcx')
 
     def save_bmp_file(self):
-        export_file_path = fd.asksaveasfilename(defaultextension='.bmp', filetypes=[('Image (.bmp file)', '.bmp')])
+        self.save_file('.bmp')
+
+    def save_modified(self, ext):
+        export_file_path = fd.asksaveasfilename(defaultextension=ext, filetypes=[(f'Image ({ext} file)', ext)])
         self.pic = self.pic.convert('RGB')
         edge_enhance = self.pic.filter(ImageFilter.EDGE_ENHANCE)
         edge_enhance.save(export_file_path)
+
+    def save_modified_pcx(self):
+        self.save_modified('.pcx')
+
+    def save_modified_bmp(self):
+        self.save_modified('.bmp')
+
 
     def clean(self):
         for widget in self.frame.winfo_children():
@@ -111,7 +98,7 @@ class Program:
     def go_to_bmp(self):
         self.clean()
 
-        self.put_button("Import PCX File", self.read_pcx_file)
+        self.put_button("Import PCX File", self.read_file)
 
         self.put_int_entry(self.width)
         self.put_int_entry(self.height)
@@ -126,7 +113,7 @@ class Program:
     def go_to_pcx(self):
         self.clean()
 
-        self.put_button("Import BMP File", self.read_bmp_file)
+        self.put_button("Import BMP File", self.read_file)
 
         self.put_int_entry(self.width)
         self.put_int_entry(self.height)
